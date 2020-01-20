@@ -321,7 +321,9 @@ def interpolate_uniform_grid(xmap,
     return nxmap
 
 
-def xmap_from_path(path: Path) -> MCDXMap:
+def xmap_from_path(path,
+                   structure_factors,
+                   ) -> MCDXMap:
     mtz_file = clipper_python.CCP4MTZfile()
 
     mtz_file.open_read(str(path))
@@ -331,9 +333,12 @@ def xmap_from_path(path: Path) -> MCDXMap:
 
     # hkl_data = clipper_python.HKL_data_F_phi(hkl_info)
     hkl_data = clipper_python.data32.HKL_data_F_phi_float(hkl_info)
-    mtz_file.import_hkl_data(hkl_data,
-                             "*/*/[FWT,PHWT]",
-                             )
+    # mtz_file.import_hkl_data(hkl_data,
+    #                          "*/*/[{}]".format(structure_factors),
+    #                          )
+
+    mtz_file.import_hkl_data(hkl_data, "*/*/[2FOFCWT,PH2FOFCWT]")
+
     mtz_file.close_read()
 
     spacegroup = hkl_info.spacegroup
